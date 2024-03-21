@@ -64,8 +64,6 @@ public function detalle(Student $student) {
 }
 
 
-
-    
 public function editar(Request $request) {
     // Obtener la instancia del estudiante
     $estudiante = Student::find($request->edit_student_id);
@@ -74,6 +72,8 @@ public function editar(Request $request) {
     if (!$estudiante) {
         return redirect()->route('student.index')->with('error', 'Estudiante no encontrado.');
     }
+        
+    
 
     // Actualizar los campos básicos del estudiante
     $estudiante->update([
@@ -89,10 +89,15 @@ public function editar(Request $request) {
 
     // Obtener los roles seleccionados
     $roles = $request->edit_roles;
+    
 
     // Sincronizar los roles del estudiante con los roles seleccionados
     if ($roles !== null) {
-        $estudiante->roles()->sync($roles);
+
+        // Asignar los nuevos roles seleccionados al estudiante
+        foreach ($roles as $roleId) {
+            $estudiante->roles()->sync($roleId);
+        }
     } else {
         // Si no se seleccionaron roles, desasociar todos los roles del estudiante
         $estudiante->roles()->detach();
@@ -101,6 +106,9 @@ public function editar(Request $request) {
     // Redireccionar
     return redirect()->route('student.index')->with('success', 'Estudiante actualizado exitosamente.');
 }
+
+
+
 
     
     

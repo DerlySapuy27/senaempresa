@@ -3,7 +3,7 @@
 @section('content_header')
     @include('head')
 
-    <h1 class="m-0 text-dark"> Aprendices SENA Empresa</h1>
+    <h1 class="m-0 text-dark">Registro Aprendices SENA Empresa</h1>
 
 @stop
 
@@ -18,70 +18,72 @@
         </div>
         <!-- Lista de Students -->
         <div class="card-body">
-            <table id="datatable" class="table table-striped shadow-lg mt-4" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
-                        <th>#Documento</th>
-                        <th>Tecnólogo</th>
-                        <th>Estrategia</th>
-                        <th>Cargo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($students as $student)
+            <div class="table-responsive">
+                <table id="datatable" class="table table-striped shadow-lg mt-4" style="width:100%">
+                    <thead>
                         <tr>
-                            <td>{{ $student->name }}</td>
-                            <td>{{ $student->last_name }}</td>
-                            <td>{{ $student->document_number }}</td>
-                            <td>{{ $student->technologist->name }}</td>
-                            <td>{{ $student->senaempresa->name }}</td>
-                            <td>
-                                @if ($student->roles->isNotEmpty())
-                                    @foreach ($student->roles as $index => $role)
-                                        {{ $role->name }}
-                                        <!-- Agrega un guion si no es el último rol -->
-                                        @if ($index < $student->roles->count() - 1)
-                                            -
-                                        @endif
-                                    @endforeach
-                                @else
-                                    Sin roles asignados
-                                @endif
-                            </td>
-                            <td>
-                                <!-- Botones de Editar y eliminar -->
-                                <div class="container text-center">
-                                    <div class="row">
-                                        <div class="col">
-                                            <button type="button" class="btn btn-primary" style="width: 70px;"
-                                                data-bs-toggle="modal" data-bs-target="#editarStudentModal"
-                                                onclick="cargarDatosEstudiante({{ $student->id }})">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col">
-                                            <form id="deleteForm{{ $student->id }}"
-                                                action="{{ route('students.delete', ['student' => $student->id]) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-danger" style="width: 70px;"
-                                                    onclick="confirmDelete({{ $student->id }})">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <!-- Fin Botones de Editar y eliminar -->
-                                </div>
-                            </td>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>#Documento</th>
+                            <th>Tecnólogo</th>
+                            <th>Estrategia</th>
+                            <th>Cargo</th>
+                            <th>Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($students as $student)
+                            <tr>
+                                <td>{{ $student->name }}</td>
+                                <td>{{ $student->last_name }}</td>
+                                <td>{{ $student->document_number }}</td>
+                                <td>{{ $student->technologist->name }}</td>
+                                <td>{{ $student->senaempresa->name }}</td>
+                                <td>
+                                    @if ($student->roles->isNotEmpty())
+                                        @foreach ($student->roles as $index => $role)
+                                            {{ $role->name }}
+                                            <!-- Agrega un guion si no es el último rol -->
+                                            @if ($index < $student->roles->count() - 1)
+                                                -
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        Sin roles asignados
+                                    @endif
+                                </td>
+                                <td>
+                                    <!-- Botones de Editar y eliminar -->
+                                    <div class="container text-center">
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="button" class="btn btn-primary" style="width: 70px;"
+                                                    data-bs-toggle="modal" data-bs-target="#editarStudentModal"
+                                                    onclick="cargarDatosEstudiante({{ $student->id }})">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <form id="deleteForm{{ $student->id }}"
+                                                    action="{{ route('students.delete', ['student' => $student->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger" style="width: 70px;"
+                                                        onclick="confirmDelete({{ $student->id }})">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <!-- Fin Botones de Editar y eliminar -->
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div><!-- Fin Lista de Students -->
     </div>
 
@@ -97,11 +99,13 @@
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombres</label>
-                            <input type="text" class="form-control" id="name" name="name" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" required>
+                            <input type="text" class="form-control" id="name" name="name"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" required>
                         </div>
                         <div class="mb-3">
                             <label for="last_name" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" required>
+                            <input type="text" class="form-control" id="last_name" name="last_name"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" required>
                         </div>
                         <div class="mb-3">
                             <label for="document_type" class="form-label">Tipo de Documento</label>
@@ -121,8 +125,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="expedition_place" class="form-label">Lugar de Expedición</label>
-                            <input type="text" class="form-control" id="expedition_place" name="expedition_place" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
-                                required>
+                            <input type="text" class="form-control" id="expedition_place" name="expedition_place"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" required>
                         </div>
                         <div class="mb-3">
                             <label for="technologist_id" class="form-label">Tecnólogo</label>
@@ -178,6 +182,7 @@
                     <form method="POST" action="{{ route('student.editar') }}">
                         @csrf
                         @method('PUT')
+                        <input type="hidden" name="edit_student_id"  id="edit_student_id">
                         <div class="mb-3">
                             <label for="edit_name" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="edit_name" name="edit_name" required>
@@ -229,7 +234,7 @@
                         </div>
                         <div id="edit_roles-container">
                             <!-- Aquí se mostrarán dinámicamente los campos de selección de roles -->
-                        </div>                                         
+                        </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Guardar cambios</button>
                         </div>
@@ -247,7 +252,6 @@
 
 
 
-<!-- script editar -->
 <script>
     function cargarDatosEstudiante(studentId) {
         var xhr = new XMLHttpRequest();
@@ -278,12 +282,20 @@
 
                         var roleField = `<div class="mb-3">
                             <label for="edit_role_id_${roleId}" class="form-label">Rol ${index + 1}:</label>
-                            <select id="edit_role_id_${roleId}" name="edit_roles[]" class="form-select">
+                            <div>
+                                <input type="text" id="edit_role_id_${roleId}" class="form-control" value="${roleName}" readonly>
+                                <select id="edit_role_id" name="edit_roles[]" class="form-select">
+                                <option value="" selected disabled>Seleccione el rol a editar</option>
                                 <!-- Opciones de roles -->
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @foreach ($roles as $r)
+                                    @php
+                                        $roleId = isset($roleId) ? $roleId : null; // Asigna null si $roleId no está definido
+                                    @endphp
+                                    <option value="{{ $r->id }}" {{ $r->id == $roleId ? 'selected' : '' }}>{{ $r->name }}</option>
                                 @endforeach
                             </select>
+
+                            </div>
                         </div>`;
 
                         rolesContainer.insertAdjacentHTML('beforeend', roleField);
@@ -313,6 +325,7 @@
         }
     }
 </script>
+
 
 
 
@@ -360,6 +373,3 @@
         updateRolesFields();
     });
 </script>
-
-
-
